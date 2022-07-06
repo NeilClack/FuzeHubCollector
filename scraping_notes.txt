@@ -2,3 +2,5 @@ Printables:
 
 Models are located in a div with the class "print-list-item"
 This div contains all required info including links
+
+even better, it appears they all exist in elements <print-card ... </print-card>
