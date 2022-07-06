@@ -47,8 +47,8 @@ _COMING SOON_
 ---  
 ## Challenges  
  
-- ### Rendering Javascript  
- #### Problem:  
+### Rendering Javascript
+#### Problem:  
   - scrapy cannot execute Javascript. The sites I want to scrape 3D models from require rendering model lists in Javascript. 
 #### Solution:  
   - I had to come up with a way to render Javascript in a headless server environment, quickly, and without switching scraping platforms. I could use Selenium to directly scrape these websites, however in past experiences, Selenium scraping is much slower than Scrapy, plus Scrapy makes it incredibly fast and easy to setup a new scraper, or, "spider". I did some digging and discoverd three possible solutions:  
@@ -58,3 +58,10 @@ _COMING SOON_
     3. ScrapingBee: A web scraping API utilizing a headless Chrome browser. At a glance, it appears to operate the same way for Scrapy that Dask does for Pandas, by taking the place of the Scrapy code to do the hard work for you. This looks like the easiest option to setup and use, but has a steep price of $49/mo for their cheapest option.  
 
     This leaves me with but one choice, Scrapy-Selenium!
+
+### Parsing the Results  
+#### Problem:  
+  - Scrapy includes an HTML parser directly, however I personally have found it to be cumbersome and sometimes unintuitive in it's selection clauses. This has prompted me to try a different approach this time.  
+
+#### Solution:  
+  - I decided, for now, to utilize BeautifulSoup 4 (or, BS4). It parses the HTML pretty well and when it does so, gives direct methods to call to select specific tags, which will be helpful in the case of Printables.com since they created their own tag to represent a "model card" called <print-card> so we should end up with something similar to soup.find_all('print-card') to get all of these items. Of course, this might change later but for now this solution makes the most sense and appears to be the least amount of effort.
