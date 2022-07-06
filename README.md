@@ -49,9 +49,9 @@ _COMING SOON_
  
 - ### Rendering Javascript  
  #### Problem:  
-    scrapy cannot execute Javascript. The sites I want to scrape 3D models from require rendering model lists in Javascript. 
+  - scrapy cannot execute Javascript. The sites I want to scrape 3D models from require rendering model lists in Javascript. 
 #### Solution:  
-    I had to come up with a way to render Javascript in a headless server environment, quickly, and without switching scraping platforms. I could use Selenium to directly scrape these websites, however in past experiences, Selenium scraping is much slower than Scrapy, plus Scrapy makes it incredibly fast and easy to setup a new scraper, or, "spider". I did some digging and discoverd three possible solutions:  
+  - I had to come up with a way to render Javascript in a headless server environment, quickly, and without switching scraping platforms. I could use Selenium to directly scrape these websites, however in past experiences, Selenium scraping is much slower than Scrapy, plus Scrapy makes it incredibly fast and easy to setup a new scraper, or, "spider". I did some digging and discoverd three possible solutions:  
 
     1. Scrapy-Selenium: A Scrapy middleware that utilizes Selenium to run Chrome or Firefox headless browsers to render the Javascript.  
     2. Scrapy-Splash: Another Scrapy middleware, built by the Scrapy team. It's been around for a while but requires coding in Lua to interact with websites and only uses a custom headless browser.  
