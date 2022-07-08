@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 threedprinting/models-printables
 .vscode/settings.json
+threedprinting/models-printables.html
+threedprinting/print-card.html
+threedprinting/print-card.html
