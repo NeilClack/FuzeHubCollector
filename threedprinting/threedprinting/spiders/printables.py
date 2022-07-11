@@ -1,17 +1,18 @@
+from email.generator import Generator
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+import sqlite3
 
 class PrintablesSpier(scrapy.Spider):
-    """Scrapes the top 10 models from Printables.com and Thingiverse.com.
-    Scrapy Spider Class
+    """Scrapes the top liked models in the last 7 days from Printables.com
     """
 
     name = "printables"
 
-    def start_requests(self, url: str = None):
+    def start_requests(self, url: str = None) -> Generator:
         """Makes the requests to the required websites."""
 
         if url is None:
@@ -28,8 +29,8 @@ class PrintablesSpier(scrapy.Spider):
                 dont_filter=True,
             )
 
-    def parse(self, response):
-        """Parses the request responses, extracts model information and sends that information to process_data() for storage."""
+    def parse(self, response) -> pd.DataFrame:
+        """Parses the response object and returns a dataframe of model information."""
 
         # Creating soup from the response body
         soup = BeautifulSoup(response.body, "html.parser")
@@ -52,5 +53,13 @@ class PrintablesSpier(scrapy.Spider):
 
             df = pd.concat([df, pd.DataFrame([model])], ignore_index=True)
 
-        df = df.sort_values(by=["likes"], ascending=False)
-        df.to_csv('pandas_test.csv', index=False)
+        self.save(df=df)
+
+
+    def save(self, df: pd.DataFrame=None) -> None:
+        """Sorts and then saves dataframe to database."""
+
+        conn = sqlite3.connect('printables.db')
+
+        df = df.sort_values(by=['likes'], ascending=False)
+        df.to_sql("models", con=conn, if_exists="replace")
