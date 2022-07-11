@@ -59,6 +59,28 @@ class PrintablesSpier(scrapy.Spider):
     def save(self, df: pd.DataFrame=None) -> None:
         """Sorts and then saves dataframe to database."""
 
+        # Read existing table
+        # Compare existing table with new results
+        # If model exists in existing table and new results
+            # update like count only*
+        # If model exists in existing table and not new results
+            # archive model
+        # If model does not exist in table but exists in new results
+            # add model
+        # * This allows for the least amount of database writes, while keeping the original datetime
+        # and thus allowing the function of tracking long-term trending items. 
+
+
+        # Read existing table
+
+        # Compare existing table (df) to new table (ndf)
+        
+            # Create new df (tdf) of objects to archive
+
+        # Write ndf to table
+
+        # Archive tdf objects and drop from models table
+
         conn = sqlite3.connect('printables.db')
 
         df = df.sort_values(by=['likes'], ascending=False)
