@@ -25,9 +25,10 @@ I have scraped this data from several sources on the web. Printable models were 
 * Python 3.10  
     * Scrapy  
     * Pandas  
-* SQLite3  
+    * SQLAlchemy  
+* PostgreSQL  
 * Ubuntu  
-* Heroku  
+* AWS  
 
 ---  
 ## Deployment  
