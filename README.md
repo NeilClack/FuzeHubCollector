@@ -67,6 +67,13 @@ _COMING SOON_
   - I decided, for now, to utilize BeautifulSoup 4 (or, BS4). It parses the HTML pretty well and when it does so, gives direct methods to call to select specific tags, which will be helpful in the case of Printables.com since they created their own tag to represent a "model card" called <print-card> so we should end up with something similar to soup.find_all('print-card') to get all of these items. Of course, this might change later but for now this solution makes the most sense and appears to be the least amount of effort.
 
 
+### Testing Scrapy  
+#### Problem:  
+  - Scrapy includes a testing framework called "contracts", and while contracts may work, my concern is that making these requests takes time, and I'm currently working with a very, very slow internet connection. What I want to do is somehow save the content of the scrape and then run tests against that saved content rather than making new requests each time. This means I won't be wasting time waiting for my connection to, well, connect, the page to load, and scrapy to receive the response.  
+
+#### Solution:  
+  - Betamax! Betamax makes a request and stores the resulting content into a file called a "cassette", which can be replayed over and over again. I'll only need to make the request once, and if something breaks during a test, I can delete the cassette and Betamax will go out and make a new request to the site to grab the most up to date content. This way it's easier to determine if a bug is being caused by a website update or by a code issue. This is much easier than manually loading the site, then saving the page to html and placing it in the correct location, all of this work is done for me.
+
 ### Managing the Scraped Models  
 #### Problem:  
   - While I can now scrape today's models, I want to do a few very specific things with them before they get stored in the database. First, I want to compare my current list of models to the newly scraped list of models. This will be followed up with one of two functions. 1. Move the model to "archived" if it does not appear on the newly scraped model list. 2. Keep the model but update the like count and keep the original scraped date. This allows me to do a few things. I'll be able to track and archive models that fall off the popular list, and I can also track models that stay on the list for extended periods of time without adding any outside data such as a counter or anything like that. It's worth noting that if someone updates the title of their model, I currently will be comparing titles and the model will become duplicated, but, I can worry about this later.  
