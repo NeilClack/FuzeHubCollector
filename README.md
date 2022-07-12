@@ -65,3 +65,11 @@ _COMING SOON_
 
 #### Solution:  
   - I decided, for now, to utilize BeautifulSoup 4 (or, BS4). It parses the HTML pretty well and when it does so, gives direct methods to call to select specific tags, which will be helpful in the case of Printables.com since they created their own tag to represent a "model card" called <print-card> so we should end up with something similar to soup.find_all('print-card') to get all of these items. Of course, this might change later but for now this solution makes the most sense and appears to be the least amount of effort.
+
+
+### Managing the Scraped Models  
+#### Problem:  
+  - While I can now scrape today's models, I want to do a few very specific things with them before they get stored in the database. First, I want to compare my current list of models to the newly scraped list of models. This will be followed up with one of two functions. 1. Move the model to "archived" if it does not appear on the newly scraped model list. 2. Keep the model but update the like count and keep the original scraped date. This allows me to do a few things. I'll be able to track and archive models that fall off the popular list, and I can also track models that stay on the list for extended periods of time without adding any outside data such as a counter or anything like that. It's worth noting that if someone updates the title of their model, I currently will be comparing titles and the model will become duplicated, but, I can worry about this later.  
+
+#### Solution:  
+  - _Not yet determined_
