@@ -26,9 +26,11 @@ I have scraped this data from several sources on the web. Printable models were 
     * Scrapy  
     * Pandas  
     * SQLAlchemy  
-* PostgreSQL  
+* PostgreSQL ( *for local development only )  
 * Ubuntu  
 * AWS  
+  * Lambda
+  * Aurora SQL
 
 ---  
 ## Deployment  
@@ -80,4 +82,7 @@ _COMING SOON_
   - While I can now scrape today's models, I want to do a few very specific things with them before they get stored in the database. First, I want to compare my current list of models to the newly scraped list of models. This will be followed up with one of two functions. 1. Move the model to "archived" if it does not appear on the newly scraped model list. 2. Keep the model but update the like count and keep the original scraped date. This allows me to do a few things. I'll be able to track and archive models that fall off the popular list, and I can also track models that stay on the list for extended periods of time without adding any outside data such as a counter or anything like that. It's worth noting that if someone updates the title of their model, I currently will be comparing titles and the model will become duplicated, but, I can worry about this later.  
 
 #### Solution:  
-  - _Not yet determined_
+  - This is a complicated topic. Starting with updating current records with new information; Pandas DataFrames behave a little differently than SQL queries, especially in the sense that they cannot be queried against in the same way. Managing the data within Python is traditionally easier in a Pandas DataFrame than it is writing raw SQL queries against a database using something like SQLAlchemy, so I want to continue to use Pandas, plus it's an integral tool in the analyst tool bag so keeping up to date and practiced is a must. I cannot, however, store the data long term in a Pandas DataFrame and even if I did, I'd still have issues creating Right Outer joins or performing some actions, like an upsert that only updates a single field. 
+  Let's start with the upsert. I've decided instead to add a new field to my database table called "initial_scrape_date" (or, maybe something similar but shorter? lol). This will hold the date that the item was first entered into the database and the existing datetime field will be renamed to "last_update". This way I have two tracking points for the purpose of tracking long term trending models, and also keeping up with models that may fall off the list and later return. I can also use this field to filter the models to the most recent, top 10, without creating a new "archived" table. Instead, the app can simply show all models, sorted by last_update, initial_scrape_date or likes count if a user wants to view older pieces. It also simplifies the joins needed and this entire operation of managing new and old models and keeping track of which ones trend. 
+
+  To summarize, I'll add a new date, initial_scrape_date (may be renamed) and modify the current date to "last_update". This prevents me from having to create a new table to store old models, gives more options for filtering models, and makes insertions and updates easier. The API can simply filter out the most reccently updated 10 models before sending them to the frontend, simplifying the entire model management process.
