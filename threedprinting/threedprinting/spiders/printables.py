@@ -75,7 +75,7 @@ class PrintablesSpier(scrapy.Spider):
 
         # Compare existing table (df) to new table (ndf)
         
-            # Create new df (tdf) of objects to archive
+            # Add objects to drop to tdf
 
         # Write ndf to table
 
