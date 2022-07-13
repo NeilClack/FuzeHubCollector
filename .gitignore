@@ -138,3 +138,4 @@ print-card.html
 .vscode
 threedprinting/pandas_test.csv
 threedprinting/printables.db
+threedprinting/threedprinting/chromedriver
