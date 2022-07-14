@@ -35,7 +35,10 @@ I have scraped this data from several sources on the web. Printable models were 
 ---  
 ## Deployment  
 
-_COMING SOON_
+### Scraper  
+#### Requirements  
+  - Install Chrome
+  - Download matching chromedriver
 
 ---  
 ## Insights  
