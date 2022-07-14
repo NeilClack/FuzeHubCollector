@@ -6,6 +6,7 @@ import pandas as pd
 from datetime import datetime
 import sqlite3
 
+
 class PrintablesSpier(scrapy.Spider):
     """Scrapes the top liked models in the last 7 days from Printables.com, 
     sorts the resulting models, 
@@ -59,19 +60,14 @@ class PrintablesSpier(scrapy.Spider):
 
 
     def save(self, df: pd.DataFrame=None) -> None:
-        """Sorts and then saves dataframe to database."""
+        """Sorts DataFrame based on model likes then
+        stores the to 10 results in a database table.
+        ---------------
+        Arguements:
+        @ df - pandas.DataFrame"""
 
         # Create connection to db
-        conn = sqlite3.connect('printables.db')
+        con = sqlite3.connect('printables.db')
 
         # Sort models by likes
-        df = df.sort_values(by=['likes'], ascending=False)
-
-        # Filter to to 10
-        df = df.head(10)
-
-        # Validation
-        print(df.head(10))
-
-        # Update database
-        df.to_sql("models", con=conn, if_exists="replace")
+        df.sort_values(by=['likes'], ascending=False).head(10).to_sql("models", con=con, if_exists="append")
