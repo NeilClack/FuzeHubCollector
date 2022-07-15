@@ -35,10 +35,12 @@ I have scraped this data from several sources on the web. Printable models were 
 ---  
 ## Deployment  
 
-### Scraper  
-#### Requirements  
-  - Install Chrome
-  - Download matching chromedriver
+1. Install Python dependencies  
+2. Install google-chrome-stable  
+3. Verify google-chrome version  
+4. Download matching chromedriver  
+5. Unzip driver and place in fuze_hub_collector directory  
+6. Run
 
 ---  
 ## Insights  
