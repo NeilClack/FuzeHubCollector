@@ -7,6 +7,15 @@ from datetime import datetime
 import sqlite3
 
 
+
+def get_connection():
+    """Generates and returns a database connection."""
+
+    conn = sqlite3.connect('models.db')
+
+    return conn
+
+
 class PrintablesSpier(scrapy.Spider):
     """Scrapes the top liked models in the last 7 days from Printables.com, 
     sorts the resulting models, 
@@ -66,8 +75,5 @@ class PrintablesSpier(scrapy.Spider):
         Arguements:
         @ df - pandas.DataFrame"""
 
-        # Create connection to db
-        con = sqlite3.connect('printables.db')
-
         # Sort models by likes
-        df.sort_values(by=['likes'], ascending=False).head(10).to_sql("models", con=con, if_exists="append")
+        df.sort_values(by=['likes'], ascending=False).head(10).to_sql(table="models", con=get_connection, if_exists="append")
