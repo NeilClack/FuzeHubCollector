@@ -129,13 +129,9 @@ dmypy.json
 .pyre/
 
 # Project specific ignores
-threedprinting/models-printables
 .vscode/settings.json
-threedprinting/models-printables.html
-threedprinting/print-card.html
-threedprinting/print-card.html
 print-card.html
 .vscode
-threedprinting/pandas_test.csv
-threedprinting/printables.db
-threedprinting/threedprinting/chromedriver
+fuze_hub_collector/driver
+*.db
+
