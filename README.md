@@ -1,5 +1,5 @@
-# 3D-Printing-Trends-Dashboard
-A simple dashboard for tracking 3D printing model trends and material prices 
+# Fuze Hub Collector
+A Scrapy web scraper that feeds the Fuze Hub with current models and material prices. 
 
 ---  
 ## Table of Contents
