@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine, Table, MetaData
-from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import insert
 import re
 
