@@ -1,12 +1,12 @@
-from email.generator import Generator
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
-from sqlalchemy import create_engine, Table, Column, MetaData
+from sqlalchemy import create_engine, Table, MetaData
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.dialects.postgresql import insert
+import re
 
 
 def save_models(df: pd.DataFrame = None) -> None:
@@ -24,6 +24,7 @@ def save_models(df: pd.DataFrame = None) -> None:
             insert_stmt = (
                 insert(models_table)
                 .values(
+                    model_id=model["model_id"],
                     name=model["name"],
                     likes=model["likes"],
                     slug=model["slug"],
@@ -31,13 +32,10 @@ def save_models(df: pd.DataFrame = None) -> None:
                     image_uri=model["image_uri"],
                     last_update=model["last_update"],
                 )
-                .on_conflict_do_update()
+                .on_conflict_do_update(index_elements=["model_id"], set_=model)
             )
-
             conn.execute(insert_stmt)
             conn.commit()
-
-    # with engine.connect() as conn:
 
 
 class PrintablesSpider(scrapy.Spider):
@@ -48,7 +46,7 @@ class PrintablesSpider(scrapy.Spider):
 
     name = "printables"
 
-    def start_requests(self, url: str = None) -> Generator:
+    def start_requests(self, url: str = None):
         """Makes the requests to the required websites."""
 
         if url is None:
@@ -72,18 +70,21 @@ class PrintablesSpider(scrapy.Spider):
         soup = BeautifulSoup(response.body, "html.parser")
 
         # Creating an empty dataframe.
-        columns = ["name", "likes", "slug", "url", "image_url"]
+        columns = ["name", "likes", "slug", "uri", "image_uri", "last_update"]
         df = pd.DataFrame(columns=columns)
 
         for tag in soup.find_all("print-card"):
             soup = tag
             model = {
+                "model_id": int(
+                    re.findall("[^model/][0-9]+[^-...]", soup.h3.a["href"])[0]
+                ),
                 "name": soup.h3.a.contents[0].strip(),
                 "likes": int(soup.find("app-like-print").span.contents[0]),
                 "slug": soup.h3.a["href"],
                 "uri": f"https://www.printables.com{soup.h3.a['href']}",
-                "image_uri": f"https://www.printables.com{soup.find('print-card-image').picture.source['srcset']}",
-                "last_update": datetime.now(),
+                "image_uri": f"{soup.find('print-card-image').picture.source['srcset']}",
+                "last_update": datetime.utcnow(),
             }
 
             df = pd.concat([df, pd.DataFrame([model])], ignore_index=True)
