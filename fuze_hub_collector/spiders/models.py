@@ -45,7 +45,7 @@ class PrintablesSpider(scrapy.Spider):
 
     name = "printables"
 
-    def start_requests(self, url: str = None):
+    def start_requests(self):
         """Makes the requests to the required websites."""
 
         if url is None:
@@ -89,3 +89,29 @@ class PrintablesSpider(scrapy.Spider):
             df = pd.concat([df, pd.DataFrame([model])], ignore_index=True)
 
         save_models(df)
+
+
+class ThingiverseSpider(scrapy.Spider):
+    """Scrapes the top liked models in the last 7 days from Thingiverse.com,
+    sorts the resulting models,
+    then stores them in the database
+    """
+
+    name = "thingiverse"
+
+    def start_requests(self):
+        """Makes the requests to the required websites."""
+
+        urls = ["https://www.thingiverse.com"]
+
+        for url in urls:
+            yield SeleniumRequest(
+                url=url,
+                wait_time=10,
+                screenshot=True,
+                callback=self.parse,
+                dont_filter=True,
+            )
+
+    def parse(self, response):
+        pass
