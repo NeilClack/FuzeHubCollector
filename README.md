@@ -90,3 +90,12 @@ _COMING SOON_
   - I will create a static field in the database table called "date_added", which will, by default, use the datetime stamp of the record insertion. When inserting records, they will not include this field which means the field will always default to "now", updates will also not touch this field and the update method will be an "upsert", so insert unless exists then update. 
 
   This greatly simplifies this entire process, and, allows for more analysis points further in the future such as like history and trend marking if a model resurfaces on the trending list. 
+
+
+---  
+---  
+---  
+
+#### Notes for Later  
+##### Database  
+- I had to create the database and table + columns and constraints manually. This isn't a big deal because it only needs to be done once, but an auto-setup script would be nice.   

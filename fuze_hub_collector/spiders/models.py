@@ -4,21 +4,45 @@ from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
-import sqlite3
+from sqlalchemy import create_engine, Table, Column, MetaData
+from sqlalchemy.dialects import postgresql
+from sqlalchemy.dialects.postgresql import insert
 
 
+def save_models(df: pd.DataFrame = None) -> None:
+    """Sorts the provided DataFrame of scraped models and saves or updates the top 10"""
+    models = df.sort_values(by=["likes"], ascending=False).head(10).to_dict("records")
+    # Creating the db engine
+    engine = create_engine(
+        "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/fuzehubdb", future=True
+    )
 
-def get_connection():
-    """Generates and returns a database connection."""
+    models_table = Table("models", MetaData(), autoload_with=engine)
 
-    conn = sqlite3.connect('models.db')
+    with engine.connect() as conn:
+        for model in models:
+            insert_stmt = (
+                insert(models_table)
+                .values(
+                    name=model["name"],
+                    likes=model["likes"],
+                    slug=model["slug"],
+                    uri=model["uri"],
+                    image_uri=model["image_uri"],
+                    last_update=model["last_update"],
+                )
+                .on_conflict_do_update()
+            )
 
-    return conn
+            conn.execute(insert_stmt)
+            conn.commit()
+
+    # with engine.connect() as conn:
 
 
-class PrintablesSpier(scrapy.Spider):
-    """Scrapes the top liked models in the last 7 days from Printables.com, 
-    sorts the resulting models, 
+class PrintablesSpider(scrapy.Spider):
+    """Scrapes the top liked models in the last 7 days from Printables.com,
+    sorts the resulting models,
     then stores them in the database
     """
 
@@ -47,7 +71,6 @@ class PrintablesSpier(scrapy.Spider):
         # Creating soup from the response body
         soup = BeautifulSoup(response.body, "html.parser")
 
-
         # Creating an empty dataframe.
         columns = ["name", "likes", "slug", "url", "image_url"]
         df = pd.DataFrame(columns=columns)
@@ -58,22 +81,11 @@ class PrintablesSpier(scrapy.Spider):
                 "name": soup.h3.a.contents[0].strip(),
                 "likes": int(soup.find("app-like-print").span.contents[0]),
                 "slug": soup.h3.a["href"],
-                "url": f"https://www.printables.com{soup.h3.a['href']}",
-                "image_url": f"https://www.printables.com{soup.find('print-card-image').picture.source['srcset']}",
+                "uri": f"https://www.printables.com{soup.h3.a['href']}",
+                "image_uri": f"https://www.printables.com{soup.find('print-card-image').picture.source['srcset']}",
                 "last_update": datetime.now(),
             }
 
             df = pd.concat([df, pd.DataFrame([model])], ignore_index=True)
 
-        self.save(df=df)
-
-
-    def save(self, df: pd.DataFrame=None) -> None:
-        """Sorts DataFrame based on model likes then
-        stores the to 10 results in a database table.
-        ---------------
-        Arguements:
-        @ df - pandas.DataFrame"""
-
-        # Sort models by likes
-        df.sort_values(by=['likes'], ascending=False).head(10).to_sql(table="models", con=get_connection, if_exists="append")
+        save_models(df)
