@@ -11,10 +11,15 @@ import re
 def save_models(df: pd.DataFrame = None) -> None:
     """Sorts the provided DataFrame of scraped models and saves or updates the top 10"""
     models = df.sort_values(by=["likes"], ascending=False).head(10).to_dict("records")
-    # Creating the db engine
-    engine = create_engine(
-        "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/fuzehubdb", future=True
-    )
+
+    try:
+        # Creating the db engine
+        engine = create_engine(
+            "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/fuzehubdb",
+            future=True,
+        )
+    except:
+        raise
 
     models_table = Table("models", MetaData(), autoload_with=engine)
 
@@ -33,8 +38,16 @@ def save_models(df: pd.DataFrame = None) -> None:
                 )
                 .on_conflict_do_update(index_elements=["model_id"], set_=model)
             )
-            conn.execute(insert_stmt)
-            conn.commit()
+
+            try:
+                conn.execute(insert_stmt)
+            except:
+                raise
+
+            try:
+                conn.commit()
+            except:
+                raise
 
 
 class PrintablesSpider(scrapy.Spider):
@@ -65,8 +78,11 @@ class PrintablesSpider(scrapy.Spider):
     def parse(self, response) -> pd.DataFrame:
         """Parses the response object and returns a dataframe of model information."""
 
-        # Creating soup from the response body
-        soup = BeautifulSoup(response.body, "html.parser")
+        try:
+            # Creating soup from the response body
+            soup = BeautifulSoup(response.body, "html.parser")
+        except:
+            raise
 
         # Creating an empty dataframe.
         columns = ["name", "likes", "slug", "uri", "image_uri", "last_update"]
@@ -74,17 +90,20 @@ class PrintablesSpider(scrapy.Spider):
 
         for tag in soup.find_all("print-card"):
             soup = tag
-            model = {
-                "model_id": int(
-                    re.findall("[^model/][0-9]+[^-...]", soup.h3.a["href"])[0]
-                ),
-                "name": soup.h3.a.contents[0].strip(),
-                "likes": int(soup.find("app-like-print").span.contents[0]),
-                "slug": soup.h3.a["href"],
-                "uri": f"https://www.printables.com{soup.h3.a['href']}",
-                "image_uri": f"{soup.find('print-card-image').picture.source['srcset']}",
-                "last_update": datetime.utcnow(),
-            }
+            try:
+                model = {
+                    "model_id": int(
+                        re.findall("[^model/][0-9]+[^-...]", soup.h3.a["href"])[0]
+                    ),
+                    "name": soup.h3.a.contents[0].strip(),
+                    "likes": int(soup.find("app-like-print").span.contents[0]),
+                    "slug": soup.h3.a["href"],
+                    "uri": f"https://www.printables.com{soup.h3.a['href']}",
+                    "image_uri": f"{soup.find('print-card-image').picture.source['srcset']}",
+                    "last_update": datetime.utcnow(),
+                }
+            except:
+                raise
 
             df = pd.concat([df, pd.DataFrame([model])], ignore_index=True)
 
