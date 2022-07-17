@@ -8,6 +8,6 @@
 from itemadapter import ItemAdapter
 
 
-class ThreedprintingPipeline:
+class FuzeHubCollectorPipeline:
     def process_item(self, item, spider):
         return item

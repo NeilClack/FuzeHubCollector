@@ -1,3 +1,5 @@
+from psycopg2 import OperationalError, ProgrammingError
+import logging
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup
@@ -5,6 +7,7 @@ import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine, Table, MetaData
 from sqlalchemy.dialects.postgresql import insert
+import sys
 import re
 
 
@@ -18,8 +21,8 @@ def save_models(df: pd.DataFrame = None) -> None:
             "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/fuzehubdb",
             future=True,
         )
-    except:
-        raise
+    except OperationalError as e:
+        logging.error(e)
 
     models_table = Table("models", MetaData(), autoload_with=engine)
 
@@ -41,8 +44,10 @@ def save_models(df: pd.DataFrame = None) -> None:
 
             try:
                 conn.execute(insert_stmt)
+            except ProgrammingError as e:
+                logging.error("e %s", (insert_stmt))
             except:
-                raise
+                logging.error(sys.exc_info)
 
             try:
                 conn.commit()
@@ -56,17 +61,23 @@ class PrintablesSpider(scrapy.Spider):
     then stores them in the database
     """
 
+    # name for scrapy to call when crawling
     name = "printables"
 
-    def start_requests(self, url: str = None):
+    # Logging configuration
+    logging.basicConfig(
+        filename=f"{name}.log",
+        format="%(levelname)s: %(asctime)s - %(message)s",
+        level=logging.ERROR,
+    )
+
+    def start_requests(self):
         """Makes the requests to the required websites."""
 
-        if url is None:
-            urls = ["https://www.printables.com/model"]
-        else:
-            urls = url
+        urls = ["https://www.printables.com/model"]
 
         for url in urls:
+            logging.info(f"Requesting {url}...")
             yield SeleniumRequest(
                 url=url,
                 wait_time=10,
@@ -82,7 +93,8 @@ class PrintablesSpider(scrapy.Spider):
             # Creating soup from the response body
             soup = BeautifulSoup(response.body, "html.parser")
         except:
-            raise
+            logging.error("Error creating soup from resulting webpage.")
+            logging.error(exc_info)
 
         # Creating an empty dataframe.
         columns = ["name", "likes", "slug", "uri", "image_uri", "last_update"]
@@ -103,7 +115,8 @@ class PrintablesSpider(scrapy.Spider):
                     "last_update": datetime.utcnow(),
                 }
             except:
-                raise
+                logging.error("Error in creating model dictionary.")
+                logging.error(sys.exc_info)
 
             df = pd.concat([df, pd.DataFrame([model])], ignore_index=True)
 

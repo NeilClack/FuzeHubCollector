@@ -1,4 +1,4 @@
-# Scrapy settings for threedprinting project
+# Scrapy settings for FuzeHubCollector project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -16,14 +16,14 @@ SELENIUM_DRIVER_ARGUMENTS = ["--headless"]
 
 DOWNLOADER_MIDDLEWARES = {"scrapy_selenium.SeleniumMiddleware": 800}
 
-BOT_NAME = "threedprinting"
+BOT_NAME = "FuzeHubCollector"
 
 SPIDER_MODULES = ["fuze_hub_collector.spiders"]
 NEWSPIDER_MODULE = "fuze_hub_collector.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'threedprinting (+http://www.yourdomain.com)'
+# USER_AGENT = 'FuzeHubCollector (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -54,13 +54,13 @@ ROBOTSTXT_OBEY = True
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 # SPIDER_MIDDLEWARES = {
-#    'threedprinting.middlewares.ThreedprintingSpiderMiddleware': 543,
+#    'FuzeHubCollector.middlewares.FuzeHubCollectorSpiderMiddleware': 543,
 # }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 # DOWNLOADER_MIDDLEWARES = {
-#    'threedprinting.middlewares.ThreedprintingDownloaderMiddleware': 543,
+#    'FuzeHubCollector.middlewares.FuzeHubCollectorDownloaderMiddleware': 543,
 # }
 
 # Enable or disable extensions
@@ -72,7 +72,7 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES = {
-#    'threedprinting.pipelines.ThreedprintingPipeline': 300,
+#    'FuzeHubCollector.pipelines.FuzeHubCollectorPipeline': 300,
 # }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
