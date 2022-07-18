@@ -22,15 +22,6 @@ I have scraped this data from several sources on the web. Printable models were 
 
 --- 
 ## Tech Stack  
-* Python 3.10  
-    * Scrapy  
-    * Pandas  
-    * SQLAlchemy  
-* PostgreSQL ( *for local development only )  
-* Ubuntu  
-* AWS  
-  * Lambda
-  * Aurora SQL
 
 ---  
 ## Deployment  
