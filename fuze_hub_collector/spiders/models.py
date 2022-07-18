@@ -18,7 +18,7 @@ def save_models(df: pd.DataFrame = None) -> None:
     try:
         # Creating the db engine
         engine = create_engine(
-            "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/fuzehubdb",
+            "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/fuzehubdb_dev",
             future=True,
         )
     except OperationalError as e:
@@ -102,6 +102,10 @@ class PrintablesSpider(scrapy.Spider):
 
         for tag in soup.find_all("print-card"):
             soup = tag
+            list_of_images = []
+            images = soup.find("print-card-image").picture.source["srcset"]
+            for x in images.split(","):
+                list_of_images.append(x[:-2].strip())
             try:
                 model = {
                     "model_id": int(
@@ -111,7 +115,7 @@ class PrintablesSpider(scrapy.Spider):
                     "likes": int(soup.find("app-like-print").span.contents[0]),
                     "slug": soup.h3.a["href"],
                     "uri": f"https://www.printables.com{soup.h3.a['href']}",
-                    "image_uri": f"{soup.find('print-card-image').picture.source['srcset']}",
+                    "image_uri": list_of_images,
                     "last_update": datetime.utcnow(),
                 }
             except:
