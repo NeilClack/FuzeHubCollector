@@ -11,6 +11,9 @@ Web scraping utility for Fuze Hub
 ---  
 ## About This  
 
+This repo contains the code which scrapes required information to feed the Fuze Hub website.  
+Scraper is built using Python 3.10 and the Scrapy web scraping framework.
+
 ---  
 ## Deployment  
 
@@ -19,7 +22,16 @@ _This app is deployed via Docker container within AWS Lambda, storing data on an
 
 ---  
 ## Development Roadmap  
-
+[X] Scrape site  
+[X] Extract elements  
+[X] Data validation  
+[X] Connect to DB  
+[X] Save to DB  
+[X] Implement upsert  
+[X] Setup scaffolding for catching errors
+[ ] Add logging    
+[ ] Unit test  
+[ ] Deploy to Lambda  
 
 ---  
 ## Changelog  
