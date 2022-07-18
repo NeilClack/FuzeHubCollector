@@ -7,5 +7,5 @@ CREATE TABLE IF NOT EXISTS models
 	uri text,
 	image_uri text[],
 	last_update TIMESTAMP NOT NULL,
-	date_added TIMESTAMPT NOT NULL DEFAULT (now() in time zone 'utc')
+	date_added TIMESTAMPT DEFAULT (now() at time zone 'utc')
 );
