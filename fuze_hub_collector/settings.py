@@ -10,12 +10,6 @@
 # for chrome driver
 from shutil import which
 
-SELENIUM_DRIVER_NAME = "chrome"
-SELENIUM_DRIVER_EXECUTABLE_PATH = "./fuze_hub_collector/driver/chromedriver"
-SELENIUM_DRIVER_ARGUMENTS = ["--headless"]
-
-DOWNLOADER_MIDDLEWARES = {"scrapy_selenium.SeleniumMiddleware": 800}
-
 BOT_NAME = "FuzeHubCollector"
 
 SPIDER_MODULES = ["fuze_hub_collector.spiders"]
@@ -23,7 +17,7 @@ NEWSPIDER_MODULE = "fuze_hub_collector.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-# USER_AGENT = 'FuzeHubCollector (+http://www.yourdomain.com)'
+USER_AGENT = 'FuzeHubCollector (+http://www.hub.fuzeprinting.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -59,9 +53,9 @@ ROBOTSTXT_OBEY = True
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'FuzeHubCollector.middlewares.FuzeHubCollectorDownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+   'fuze_hub_collector.middlewares.FuzeHubCollectorDownloaderMiddleware': 543,
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
