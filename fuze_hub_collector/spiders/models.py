@@ -105,6 +105,9 @@ class PrintablesSpider(scrapy.Spider):
                     "image_uri": list_of_images,
                     "last_update": datetime.utcnow(),
                 }
+            except ValueError as e:
+                logging.error("Missing key in scraped data")
+                logging.error(e)
             except:
                 logging.error("Error in creating model dictionary.")
                 logging.error(exc_info)
