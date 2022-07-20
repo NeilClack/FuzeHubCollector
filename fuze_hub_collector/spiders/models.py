@@ -63,6 +63,7 @@ class PrintablesSpider(scrapy.Spider):
 
     # name for scrapy to call when crawling
     name = "printables"
+    urls = ['https://www.printables.com/model']
 
     # Logging configuration
     logging.basicConfig(
@@ -74,9 +75,7 @@ class PrintablesSpider(scrapy.Spider):
     def start_requests(self):
         """Makes the requests to the required websites."""
 
-        urls = ["https://www.printables.com/model"]
-
-        for url in urls:
+        for url in self.urls:
             logging.info(f"Requesting {url}...")
             yield SeleniumRequest(
                 url=url,
