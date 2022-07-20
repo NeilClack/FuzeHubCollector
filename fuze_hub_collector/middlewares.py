@@ -7,9 +7,6 @@ from scrapy import signals
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
-from shutil import which
-from scrapy.http import HtmlResponse
-from selenium.webdriver import ChromeOptions, DesiredCapabilities, Chrome
 
 
 class FuzeHubCollectorSpiderMiddleware:
@@ -81,25 +78,7 @@ class FuzeHubCollectorDownloaderMiddleware:
         # - or return a Request object
         # - or raise IgnoreRequest: process_exception() methods of
         #   installed downloader middleware will be called
-
-        options = ChromeOptions()
-
-        options.add_argument('--headless')
-        options.add_argument("no-sandbox")
-        options.add_argument("--disable-gpu")
-
-        driver = Chrome(
-            executable_path=(which('chromedriver')),
-            options=options,
-            desired_capabilities=DesiredCapabilities.CHROME
-        )
-        
-        return HtmlResponse(
-            driver.current_url, 
-            body=str.encode(driver.page_source), 
-            encoding='utf-8', 
-            request=request
-            )
+        return None
 
     def process_response(self, request, response, spider):
         # Called with the response returned from the downloader.

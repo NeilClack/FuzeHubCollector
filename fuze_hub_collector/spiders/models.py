@@ -1,12 +1,13 @@
 from psycopg2 import OperationalError, ProgrammingError
 import logging
 import scrapy
+from scrapy_selenium import SeleniumRequest
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine, Table, MetaData
 from sqlalchemy.dialects.postgresql import insert
-from sys import exc_info
+import sys
 import re
 
 
@@ -46,7 +47,7 @@ def save_models(df: pd.DataFrame = None) -> None:
             except ProgrammingError as e:
                 logging.error("e %s", (insert_stmt))
             except:
-                logging.error(exc_info)
+                logging.error(sys.exc_info)
 
             try:
                 conn.commit()
@@ -62,8 +63,6 @@ class PrintablesSpider(scrapy.Spider):
 
     # name for scrapy to call when crawling
     name = "printables"
-    allowed_domains = ['printables.com']
-    start_urls = ["https://www.printables.com/model"]
 
     # Logging configuration
     logging.basicConfig(
@@ -72,6 +71,20 @@ class PrintablesSpider(scrapy.Spider):
         level=logging.ERROR,
     )
 
+    def start_requests(self):
+        """Makes the requests to the required websites."""
+
+        urls = ["https://www.printables.com/model"]
+
+        for url in urls:
+            logging.info(f"Requesting {url}...")
+            yield SeleniumRequest(
+                url=url,
+                wait_time=10,
+                screenshot=True,
+                callback=self.parse,
+                dont_filter=True,
+            )
 
     def parse(self, response) -> pd.DataFrame:
         """Parses the response object and returns a dataframe of model information."""
@@ -105,12 +118,9 @@ class PrintablesSpider(scrapy.Spider):
                     "image_uri": list_of_images,
                     "last_update": datetime.utcnow(),
                 }
-            except ValueError as e:
-                logging.error("Missing key in scraped data")
-                logging.error(e)
             except:
                 logging.error("Error in creating model dictionary.")
-                logging.error(exc_info)
+                logging.error(sys.exc_info)
 
             df = pd.concat([df, pd.DataFrame([model])], ignore_index=True)
 
