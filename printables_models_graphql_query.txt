@@ -1,0 +1,24 @@
+curl 'https://www.printables.com/graphql/' \
+  -H 'authority: www.printables.com' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'accept-language: en' \
+  -H 'apollographql-client-version: v2.6.3' \
+  -H 'cache-control: no-cache' \
+  -H 'client-uid: 19815d0b-0b18-443e-980a-29eb13bf93a8' \
+  -H 'content-type: application/json' \
+  -H 'cookie: csrftoken=4C2E6HG4VUeZogX4o5T4Ldg1AvUC8RYmBAzPgCJdOBA6vKfI85W4iDQL3HlAcQio; _gid=GA1.2.921086694.1658804671; OptanonAlertBoxClosed=2022-07-26T03:04:34.881Z; _gcl_au=1.1.263062811.1658804675; _fbp=fb.1.1658804675076.1412094032; _rdt_uuid=1658804675086.15a6863e-f325-495a-b994-3c26b0fb23b1; OptanonConsent=isGpcEnabled=0&datestamp=Mon+Jul+25+2022+22%3A08%3A54+GMT-0500+(Central+Daylight+Time)&version=6.33.0&isIABGlobal=false&hosts=&consentId=ae40db0c-4048-4ef4-8d5b-8b0d9b05411e&interactionCount=1&landingPath=NotLandingPage&groups=C0001%3A1%2CC0004%3A1&geolocation=US%3BTX&AwaitingReconsent=false; _gat_UA-192499-29=1; _gat_UA-192499-38=1; _ga_3HK7B7RT5V=GS1.1.1658804670.1.1.1658804944.0; _ga_65PWSTXL4S=GS1.1.1658804670.1.1.1658804944.0; _ga=GA1.2.255300523.1658804671' \
+  -H 'operation: PrintList' \
+  -H 'origin: https://www.printables.com' \
+  -H 'pragma: no-cache' \
+  -H 'referer: https://www.printables.com/model' \
+  -H 'sec-ch-ua: "Chromium";v="102", "Opera GX";v="88", ";Not A Brand";v="99"' \
+  -H 'sec-ch-ua-mobile: ?0' \
+  -H 'sec-ch-ua-platform: "Windows"' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-site: same-origin' \
+  -H 'sentry-trace: d568911783d14a49b418d2b4582c903a-8b848a4cb1c34067-0' \
+  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.115 Safari/537.36 OPR/88.0.4412.85' \
+  -H 'x-authorization: ' \
+  --data-raw $'{"operationName":"PrintList","variables":{"limit":36,"categoryId":null,"publishedDateLimitDays":null,"hasMake":false,"competitionAwarded":false,"featured":false,"likedByMe":false,"collectedByMe":false,"madeByMe":false,"ordering":"-likes_count_7_days","cursor":null},"query":"query PrintList($limit: Int\u0021, $cursor: String, $categoryId: ID, $materialIds: [Int], $userId: ID, $printerIds: [Int], $licenses: [ID], $ordering: String, $hasModel: Boolean, $filesType: [FilterPrintFilesTypeEnum], $includeUserGcodes: Boolean, $nozzleDiameters: [Float], $weight: IntervalObject, $printDuration: IntervalObject, $publishedDateLimitDays: Int, $featured: Boolean, $featuredNow: Boolean, $usedMaterial: IntervalObject, $hasMake: Boolean, $competitionAwarded: Boolean, $onlyFollowing: Boolean, $collectedByMe: Boolean, $madeByMe: Boolean, $likedByMe: Boolean) {\\n  morePrints(\\n    limit: $limit\\n    cursor: $cursor\\n    categoryId: $categoryId\\n    materialIds: $materialIds\\n    printerIds: $printerIds\\n    licenses: $licenses\\n    userId: $userId\\n    ordering: $ordering\\n    hasModel: $hasModel\\n    filesType: $filesType\\n    nozzleDiameters: $nozzleDiameters\\n    includeUserGcodes: $includeUserGcodes\\n    weight: $weight\\n    printDuration: $printDuration\\n    publishedDateLimitDays: $publishedDateLimitDays\\n    featured: $featured\\n    featuredNow: $featuredNow\\n    usedMaterial: $usedMaterial\\n    hasMake: $hasMake\\n    onlyFollowing: $onlyFollowing\\n    competitionAwarded: $competitionAwarded\\n    collectedByMe: $collectedByMe\\n    madeByMe: $madeByMe\\n    liked: $likedByMe\\n  ) {\\n    cursor\\n    items {\\n      ...PrintListFragment\\n      printer {\\n        id\\n        __typename\\n      }\\n      user {\\n        rating\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\\nfragment PrintListFragment on PrintType {\\n  id\\n  name\\n  slug\\n  ratingAvg\\n  likesCount\\n  liked\\n  datePublished\\n  dateFeatured\\n  firstPublish\\n  userGcodeCount\\n  downloadCount\\n  inMyCollections\\n  category {\\n    id\\n    path {\\n      id\\n      name\\n      __typename\\n    }\\n    __typename\\n  }\\n  modified\\n  images {\\n    ...ImageSimpleFragment\\n    __typename\\n  }\\n  filesType\\n  hasModel\\n  user {\\n    ...AvatarUserFragment\\n    __typename\\n  }\\n  ...LatestCompetitionResult\\n  __typename\\n}\\n\\nfragment AvatarUserFragment on UserType {\\n  id\\n  publicUsername\\n  avatarFilePath\\n  slug\\n  badgesProfileLevel {\\n    profileLevel\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment LatestCompetitionResult on PrintType {\\n  latestCompetitionResult {\\n    placement\\n    competitionId\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment ImageSimpleFragment on PrintImageType {\\n  id\\n  filePath\\n  rotation\\n  __typename\\n}\\n"}' \
+  --compressed

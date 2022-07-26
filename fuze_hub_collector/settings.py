@@ -15,7 +15,7 @@ SELENIUM_DRIVER_NAME = "chrome"
 SELENIUM_COMMAND_EXECUTOR = "127.0.0.1:4444/wd/hub"
 SELENIUM_DRIVER_ARGUMENTS = ["--headless"]
 
-DOWNLOADER_MIDDLEWARES = {"scrapy_selenium_custom.SeleniumMiddleware": 800}
+DOWNLOADER_MIDDLEWARES = {"fuze_hub_collector.middlewares.FuzeHubCollectorDownloaderMiddleware": 800}
 
 BOT_NAME = "FuzeHubCollector"
 

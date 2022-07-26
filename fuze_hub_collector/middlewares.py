@@ -3,10 +3,13 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy import signals
+from scrapy import signals, Request
+from scrapy.http import HtmlResponse
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
+from selenium.webdriver import Remote, FirefoxOptions
+
 
 
 class FuzeHubCollectorSpiderMiddleware:
@@ -57,36 +60,44 @@ class FuzeHubCollectorSpiderMiddleware:
 
 
 class FuzeHubCollectorDownloaderMiddleware:
-    # Not all methods need to be defined. If a method is not defined,
-    # scrapy acts as if the downloader middleware does not modify the
-    # passed objects.
+
+    def __init__(self):
+        self.driver = None
 
     @classmethod
     def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
         s = cls()
         crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
         return s
 
     def process_request(self, request, spider):
-        # Called for each request that goes through the downloader
-        # middleware.
+        # Browser options
+        options = FirefoxOptions()
 
-        # Must either:
-        # - return None: continue processing this request
-        # - or return a Response object
-        # - or return a Request object
-        # - or raise IgnoreRequest: process_exception() methods of
-        #   installed downloader middleware will be called
-        return None
+        # Selenium remote driver
+        self.driver = Remote("http://localhost:4444", options=options)
+
+        self.driver.get(request.url)
+
+        # Adding cookies
+        for name, value in request.cookies.items():
+                self.driver.add_cookie(
+                    {
+                        'name':name,
+                        'value':value
+                    }
+                )
+
+        body = str.encode(self.driver.page_source)
+
+        return HtmlResponse(
+            self.driver.current_url,
+            body=body,
+            encoding='utf-8',
+            request=request
+        )
 
     def process_response(self, request, response, spider):
-        # Called with the response returned from the downloader.
-
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
         return response
 
     def process_exception(self, request, exception, spider):
