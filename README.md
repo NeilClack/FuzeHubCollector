@@ -21,8 +21,11 @@ Scraper is built using Python 3.10 and the Scrapy web scraping framework.
 ---  
 ## Deployment  
 
-_This app is deployed via Docker container within AWS Lambda, storing data on an AWS Aurora - Postgres instance._  
+Deployed on Linode via Scrapyd and the Selenium/standalone-chrome docker image and connects to a local Postgres database server.  
 
+Scrapyd deployment:  
+1. Eggify the project  
+2. 
 
 ---  
 ## Development Roadmap  
