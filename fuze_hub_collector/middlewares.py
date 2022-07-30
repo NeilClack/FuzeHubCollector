@@ -3,13 +3,13 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy import signals, Request
+from scrapy import signals
 from scrapy.http import HtmlResponse
 
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
-from selenium.webdriver import Remote, FirefoxOptions
-
+from selenium.webdriver import Chrome, ChromeOptions
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 class FuzeHubCollectorSpiderMiddleware:
@@ -62,7 +62,10 @@ class FuzeHubCollectorSpiderMiddleware:
 class FuzeHubCollectorDownloaderMiddleware:
 
     def __init__(self):
-        self.driver = None
+        webdriver_path="./driver/chromedriver"
+        options = ChromeOptions()
+        options.add_argument("--headless")
+        self.driver = Chrome(executable_path=ChromeDriverManager().install(), options=options)
 
     @classmethod
     def from_crawler(cls, crawler):
@@ -71,22 +74,22 @@ class FuzeHubCollectorDownloaderMiddleware:
         return s
 
     def process_request(self, request, spider):
-        # Browser options
-        options = FirefoxOptions()
+        
+        print("###########################")
+        print("###### Middleware #########")
+        print("###########################")
 
-        # Selenium remote driver
-        self.driver = Remote("http://localhost:4444", options=options)
 
         self.driver.get(request.url)
 
-        # Adding cookies
-        for name, value in request.cookies.items():
-                self.driver.add_cookie(
-                    {
-                        'name':name,
-                        'value':value
-                    }
-                )
+        # Passing cookies to driver
+        for cookie_name, cookie_value in request.cookies.items():
+            self.driver.add_cookie(
+                {
+                    'name': cookie_name,
+                    'value': cookie_value
+                }
+            )
 
         body = str.encode(self.driver.page_source)
 
