@@ -7,6 +7,7 @@ import pandas as pd
 from datetime import datetime
 from sqlalchemy import create_engine, Table, MetaData
 from sqlalchemy.dialects.postgresql import insert
+import os
 import sys
 import re
 
@@ -18,7 +19,7 @@ def save_models(df: pd.DataFrame = None) -> None:
     try:
         # Creating the db engine
         engine = create_engine(
-            "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/fuzehubdb_dev",
+            f"postgresql+psycopg2://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASS']}@127.0.0.1:5432/fuzehubdb_prod",
             future=True,
         )
     except OperationalError as e:
