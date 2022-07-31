@@ -28,20 +28,6 @@ ROBOTSTXT_OBEY = True
 
 ## settings.py
 
-## Add Your ScrapeOps API key
-SCRAPEOPS_API_KEY = os.environ['SCRAPEOPS']
-
-## Add In The ScrapeOps Extension
-EXTENSIONS = {
- 'scrapeops_scrapy.extension.ScrapeOpsMonitor': 500, 
-}
-
-## Update The Download Middlewares
-DOWNLOADER_MIDDLEWARES = { 
-'scrapeops_scrapy.middleware.retry.RetryMiddleware': 550, 
-'scrapy.downloadermiddlewares.retry.RetryMiddleware': None, 
-}
-
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 # CONCURRENT_REQUESTS = 32
 
