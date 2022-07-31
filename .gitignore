@@ -132,6 +132,5 @@ dmypy.json
 .vscode/settings.json
 print-card.html
 .vscode
-fuze_hub_collector/driver
 *.db
 

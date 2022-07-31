@@ -65,7 +65,7 @@ class FuzeHubCollectorDownloaderMiddleware:
         webdriver_path="./driver/chromedriver"
         options = ChromeOptions()
         options.add_argument("--headless")
-        self.driver = Chrome(executable_path=ChromeDriverManager().install(), options=options)
+        self.driver = Chrome('./fuze_hub_collector/driver/chromedriver', options=options)
 
     @classmethod
     def from_crawler(cls, crawler):
